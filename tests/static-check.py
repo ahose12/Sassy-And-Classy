@@ -11,12 +11,13 @@ class Parser(HTMLParser):
    self.ids.add(a['id'])
   for key in ['src','href']:
    if key in a:self.links.append(a[key])
-for html in (root/'docs').glob('*.html'):
+for html in list((root/'docs').glob('*.html'))+list(root.glob('*.html')):
  parser=Parser();parser.feed(html.read_text())
  for link in parser.links:
   if re.match(r'^(https?:|mailto:|tel:)',link):continue
   if link.startswith('#'):assert link[1:] in parser.ids, (html.name,link)
   else:assert (html.parent/link.split('#')[0]).exists(),(html.name,link)
+ if html.parent==root:continue
  js=root/'docs'/('admin.js' if html.name=='admin.html' else 'app.js')
  for identifier in re.findall(r"\$\('#([\w-]+)'\)",js.read_text()):
   if identifier in ['quote-status-edit','save-quote-status','quote-update-status','quote-artifacts']:continue
