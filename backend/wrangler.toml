@@ -1,0 +1,26 @@
+name = "sassy-classy-api"
+main = "worker.mjs"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://YOUR-USER.github.io,https://YOUR-SITE.pages.dev"
+SITE_URL = "https://YOUR-SITE.pages.dev"
+API_URL = "https://sassy-classy-api.YOUR-SUBDOMAIN.workers.dev"
+OWNER_EMAIL = "sassy_classy@rocketmail.com"
+EMAIL_PROVIDER = "resend" # or smtp-relay to send through the owner's Yahoo/Rocketmail mailbox
+MAIL_FROM = "Sassy & Classy <hello@YOUR-VERIFIED-DOMAIN.com>"
+BUSINESS_ADDRESS = "REPLACE WITH THE BUSINESS MAILING ADDRESS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sassy-classy"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "ARTWORK"
+bucket_name = "sassy-classy-private"
+
+[triggers]
+crons = ["* * * * *"] # Drain queued campaigns in small, rate-limited batches.
+# Secrets set with wrangler secret put: OWNER_PASSWORD_HASH, TURNSTILE_SECRET,
+# RESEND_API_KEY (default) or SMTP_RELAY_URL / SMTP_RELAY_TOKEN (optional mailbox adapter).
