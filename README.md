@@ -2,6 +2,35 @@
 
 A branded, mobile-friendly storefront and owner studio for Mary Jane Bevil's custom T-shirt business. Based on the supplied pale-blue, teal, gold, and script artwork. The original logo lettering stays intact in the supplied image. Allura is a close script-style substitute for editable text, not a claim to identify the original font.
 
+## Version 2 updates
+
+- Added root `index.html` and `admin.html` entrypoints. Opening a root-published GitHub Pages site now leads directly to the storefront; `/docs` publishing still works.
+- Separated the hero shirt, branding, and caption so they no longer overlap.
+- Shared a font-fitting and word-wrapping algorithm between on-screen shirt text and PNG exports. Product-card sample text also fits its print area.
+- Kept logo proportions intact, placed newly added pieces apart, added overlap hints, and added Clear all artwork.
+- Added owner-editable Instagram, Facebook, TikTok, Pinterest, and Google Drive folder URLs. Social links appear publicly; the connected Drive shortcut stays in the owner dashboard.
+- Added a Refresh requests & studio data button.
+
+To apply this package, copy its contents into the repository root alongside your existing `docs`, `backend`, and `tests` folders, replacing the matching files. Do not delete the repository's `.git` folder. Keep any real `docs/config.js` API/Turnstile settings and backend environment settings you have already configured; this downloadable package intentionally contains placeholders.
+
+Then commit and push. Under GitHub **Settings → Pages**, select **Deploy from a branch → main → /docs → Save** for the preview. The expected project URL is `https://ahose12.github.io/Sassy-And-Classy/`. The root redirect also supports publishing from `/ (root)`. GitHub Pages must be enabled on your account/repository; adding files alone cannot change that setting. Deployment of this revision has not been performed or verified.
+
+If you already deployed the backend, rerun `schema.sql` to add the `settings` table without deleting your existing data, then redeploy the Worker. There are no database credentials or live integrations in this package.
+
+## Request-to-owner flow
+
+Submitting a connected quote sends the choices and artwork to the Worker. The Worker validates them, stores contact details in `customers`, inserts the request into `quotes`, saves private images in R2, and attempts an owner notification. The studio reads those records into **Quote requests**, where Mary Jane can open the artwork and update status. The request is retained even when notification email fails. The Refresh button fetches new requests without signing out.
+
+The implemented database is Cloudflare D1. Supabase/Postgres or AWS can support the same workflow, but they are alternatives rather than additional services you need to run beside D1. Choosing either requires adapting the API/storage/auth configuration; no Supabase or AWS account is connected here.
+
+## Social and Drive connections
+
+Open **Owner studio → Connections** to set profile links and a Google Drive folder shortcut. In demo mode these are local-browser settings; with the backend they are shared records. Storefront links open in a new tab. Saving a URL does not grant the website access to the account.
+
+For social integrations beyond links, the next stage is an explicit owner sign-in/authorization flow, server-held access tokens, and platform permissions. Possible features include publishing deals to Facebook/Instagram, importing a permitted feed, or composing posts for review. Automatic posting, social login, social messages, and imported feeds are not implemented or connected in this revision. Private customer emails and uploaded artwork are not published to socials.
+
+The Drive shortcut opens your existing folder. Automatic copying/syncing of quote files still requires Google authorization and a server upload job; it is not implied by saving the link.
+
 ## Start here
 
 1. Open `docs/index.html` to explore the storefront. All links and assets are relative, including GitHub project-repository paths.
@@ -125,7 +154,7 @@ The customizer is a concept preview. Its illustration is a generic crew-neck sha
 
 ## Verification
 
-Run `node --test tests/backend.test.mjs` and `python3 tests/static-check.py` from the project root. These verify private route access, origin checks, password verification, validated quotes, subscription state, campaign selection, inline attachments, schema constraints, local asset links, and JavaScript syntax. Browser visual QA and live email/account integration testing still require your deployment environment.
+Run `node --test tests/backend.test.mjs tests/layout.test.mjs` and `python3 tests/static-check.py` from the project root. These verify private route access, origin checks, password verification, validated quotes, subscription state, campaign selection, inline attachments, schema constraints, private Drive settings, public social links, text fitting, logo aspect ratios, root entrypoints, local asset links, and JavaScript syntax. Browser visual QA and live email/account integration testing still require your deployment environment.
 
 Official setup references:
 - https://developers.cloudflare.com/workers/
