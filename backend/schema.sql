@@ -9,3 +9,5 @@ CREATE TABLE IF NOT EXISTS campaigns(id TEXT PRIMARY KEY, subject TEXT NOT NULL,
 CREATE TABLE IF NOT EXISTS deliveries(id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL REFERENCES campaigns(id), customer_id TEXT NOT NULL REFERENCES customers(id), status TEXT NOT NULL DEFAULT 'queued', attempts INTEGER NOT NULL DEFAULT 0, locked_until INTEGER NOT NULL DEFAULT 0, provider_id TEXT, UNIQUE(campaign_id,customer_id));
 CREATE INDEX IF NOT EXISTS deliveries_status ON deliveries(status,locked_until);
 -- No fabricated products or customer emails are seeded in the live database.
+
+CREATE TABLE IF NOT EXISTS settings(id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL);
